@@ -1,0 +1,20 @@
+# Build
+out/
+ext/
+
+# Visual Studio
+.vs/
+
+# CMake
+CMakeSettings.json
+CMakeFiles/
+CMakeCache.txt
+
+# Binaries
+*.exe
+*.obj
+*.o
+
+# Assets
+*.obj
+*.mtl
