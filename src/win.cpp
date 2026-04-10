@@ -16,7 +16,7 @@ int SDLApp::launchWindow(){
 	renData.rotX = 0;
 	renData.rotY = 0;
 	renData.rotZ = 0;
-	renData.off = 5;
+	renData.zoom = 5;
 	renData.scale = 200;
 
 	SDL_GetWindowSize(mwin, &renData.w, &renData.h);
@@ -45,7 +45,7 @@ void SDLApp::runTick() {
 
 void SDLApp::Input() {
 	while (SDL_PollEvent(&event)) {
-		inputEvent(event, mrunning);
+		inputEvent(event, mrunning, renData.zoom);
 	}
 }
 
