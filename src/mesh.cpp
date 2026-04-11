@@ -6,5 +6,4 @@
 Mesh::Mesh() {
 	std::vector<Point3D> verts;
 	std::vector<std::pair<int, int>> edges;
-	//vertCount = verts.size();
 }
