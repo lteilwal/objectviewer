@@ -2,8 +2,8 @@
 #include "mesh.h"
 #include "input.h"
 #include "fileprocessor.h"
-#include "calc.h"
 #include "render.h"
+#include "kernelCalc.h"
 #include <SDL3/SDL.h>
 
 int SDLApp::launchWindow(){
@@ -16,8 +16,8 @@ int SDLApp::launchWindow(){
 	renData.rotX = 0;
 	renData.rotY = 0;
 	renData.rotZ = 0;
-	renData.zoom = 5;
-	renData.scale = 200;
+	renData.zoom = 50;
+	renData.scale = 2000;
 
 	SDL_GetWindowSize(mwin, &renData.w, &renData.h);
 
@@ -28,7 +28,6 @@ int SDLApp::launchWindow(){
 
 	std::string fileName = "mesh.obj";
 	loadFile(fileName, mesh.verts, mesh.edges);
-
 	runTick();
 
 	return 0;
@@ -51,7 +50,8 @@ void SDLApp::Input() {
 
 void SDLApp::Update() {
 	renData.rotZ = 180;
-	renData.rotY += 0.05f;
+	renData.rotY += 0.5;
+	renData.rotX = -90;
 }
 
 void SDLApp::Render() {

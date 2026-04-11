@@ -1,33 +1,26 @@
 #include "render.h"
-#include "calc.h"
+#include "kernelCalc.h"
 
 void meshPointsCalc(SDL_Renderer* mren, Mesh& mesh, rData rd) {
-	for (Point3D pt : mesh.verts) {
-		Point3D tempt = meshRotateCalc(pt, rd);
-		Point2D project2D = proj3Dto2D(tempt, rd.zoom);
-		Point2D screenPoint2D = screenMap(project2D, rd.scale, rd.w, rd.h);
-		SDL_RenderPoint(mren, screenPoint2D.x, screenPoint2D.y);
-	}
+	std::vector<Point2D> screenPoint2D;
+	kernelLaunchCalc(mesh, screenPoint2D, rd);
+	meshPointsRender(mren, screenPoint2D);
+}
+
+void meshPointsRender(SDL_Renderer* mren, const std::vector<Point2D>& screenPoint2D) {
+	SDL_RenderPoints(mren, reinterpret_cast<const SDL_FPoint*>(screenPoint2D.data()), (int)screenPoint2D.size());
 }
 
 void meshEdgesCalc(SDL_Renderer* mren, Mesh& mesh, rData rd) {
-	for (std::pair<int, int> pt : mesh.edges) {
-		int i = pt.first;
-		int j = pt.second;
-		Point3D p1 = meshRotateCalc(mesh.verts[i], rd);
-		Point3D p2 = meshRotateCalc(mesh.verts[j], rd);
-		Point2D project2D1 = proj3Dto2D(p1, rd.zoom);
-		Point2D project2D2 = proj3Dto2D(p2, rd.zoom);
-		Point2D screenPoint2D1 = screenMap(project2D1, rd.scale, rd.w, rd.h);
-		Point2D screenPoint2D2 = screenMap(project2D2, rd.scale, rd.w, rd.h);
-		SDL_RenderLine(mren, screenPoint2D1.x, screenPoint2D1.y, screenPoint2D2.x, screenPoint2D2.y);
+	std::vector<Point2D> screenPoint2D;
+	kernelLaunchCalc(mesh, screenPoint2D, rd);
+
+	int n = (int)mesh.edges.size();
+	for (int i = 0; i < n; i++) {
+		meshEdgesRender(mren, screenPoint2D[mesh.edges[i].first], screenPoint2D[mesh.edges[i].second]);
 	}
 }
 
-Point3D meshRotateCalc(const Point3D& pt, rData rd) {
-	Point3D tempPt;
-	tempPt = rotatePointX(pt, rd.rotX);
-	tempPt = rotatePointY(tempPt, rd.rotY);
-	tempPt = rotatePointZ(tempPt, rd.rotZ);
-	return tempPt;
+void meshEdgesRender(SDL_Renderer* mren, Point2D screenPoint2D1, Point2D screenPoint2D2) {
+	SDL_RenderLine(mren, screenPoint2D1.x, screenPoint2D1.y, screenPoint2D2.x, screenPoint2D2.y);
 }
