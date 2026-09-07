@@ -1,6 +1,7 @@
 # Build
 out/
 ext/
+build/
 
 # Visual Studio
 .vs/
